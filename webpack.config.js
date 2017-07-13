@@ -8,7 +8,7 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: '[name].min.js'
+        filename: '[name].[hash].min.js'
     },
     module: {
         rules: [{
@@ -43,11 +43,12 @@ module.exports = {
         contentBase: path.join(__dirname, 'dist'),
         proxy: {
             '/': {
-                target: 'http://tuohuang.yl.com/yanghj/blog/',
+                target: 'http://localhost:9090/',
                 secure: false,
                 changeOrigin: true
             }
         },
-        disableHostCheck: true
+        disableHostCheck: true,
+        historyApiFallback: true
     }
 }
