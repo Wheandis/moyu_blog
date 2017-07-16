@@ -3,7 +3,7 @@ import { render } from 'react-dom'
 import BlogHeader from './components/blogheader'
 import Blog from './components/blog'
 import Home from './components/home'
-import About from './components/home'
+import About from './components/about'
 import {
     HashRouter as Router,
     // BrowserRouter as Router,

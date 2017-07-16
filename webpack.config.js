@@ -8,7 +8,7 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: '[name].[hash].min.js'
+        filename: '[name].min.js'
     },
     module: {
         rules: [{
@@ -21,7 +21,7 @@ module.exports = {
             ],
             loader: 'babel-loader',
             options: {
-                presets: ['es2015', 'react']
+                presets: ['es2015', 'react','stage-1']
             }
         }, {
             test: /\.css$/,
@@ -42,7 +42,7 @@ module.exports = {
     devServer: {
         contentBase: path.join(__dirname, 'dist'),
         proxy: {
-            '/': {
+            '/posts/': {
                 target: 'http://localhost:9090/',
                 secure: false,
                 changeOrigin: true

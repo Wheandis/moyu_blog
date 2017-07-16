@@ -1,19 +1,32 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import hljs from 'highlight.js'
 
 import markdownit from 'markdown-it'
 const md = markdownit({
-    html: true
+    html: true,
+    highlight: function (str, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+            try {
+                return hljs.highlight(lang, str).value;
+            } catch (__) { }
+        }
+        return ''; // use external default escaping 
+    }
 })
+    .use(require('markdown-it-fontawesome'))
+    .use(require('markdown-it-footnote'))
+    .use(require('markdown-it-checkbox'))
 
 const ajax = id => {
-    return fn => {
-        axios.get(`/${id}.md`)
+    return (fn, fn1) => {
+        axios.get(`/posts/${id}.md?${Math.random()}`)
             .then(res => res.data)
             .then(res => {
                 fn(res)
             })
             .catch(error => {
+                fn1(error)
             });
     }
 
@@ -31,6 +44,10 @@ class Blog extends Component {
             this.setState({
                 html: md.render(res)
             })
+        }, () => {
+            this.setState({
+                error: true
+            })
         })
     }
     componentWillReceiveProps(props) {
@@ -38,23 +55,32 @@ class Blog extends Component {
             this.setState({
                 html: md.render(res)
             })
+        }, () => {
+            this.setState({
+                error: true
+            })
         })
     }
 
     render() {
+        const divSty = {
+            width: '90%',
+            margin: '0 auto'
+        }
         const { html, error } = this.state
+        let res
         if (error) {
-            return <div>Error</div>
-        }
-        if (html) {
-            return (
-                <div className="markdown-body">
-                    <div dangerouslySetInnerHTML={{ __html: this.state.html }} />
-                </div>
-            )
+            res = <div>找不到这篇笔记～～</div>
+        } else if (html) {
+            res = <div dangerouslySetInnerHTML={{ __html: this.state.html }} />
         } else {
-            return <div>Loading</div>
+            res = <div>Loading...</div>
         }
+        return (
+            <div style={divSty} className="markdown-body">
+                {res}
+            </div>
+        )
     }
 }
 
